@@ -1,0 +1,1 @@
+Flask>=3.0,<4.0\nFlask-SQLAlchemy>=3.1,<4.0\nPyMySQL>=1.1,<2.0\npsycopg2-binary>=2.9,<3.0\ngunicorn>=22.0,<24.0\npython-dotenv>=1.0,<2.0\n

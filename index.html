@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}Home{% endblock %}{% block content %}
+<section class="hero"><div class="eyebrow"><span class="pulse"></span> STUDENT VOICE · BETTER LEARNING</div>
+<h1>Your feedback.<br><span>Real improvement.</span></h1><p class="hero-copy">A simple, anonymous way to share your learning experience. Your honest feedback helps make every course better.</p>
+<div class="hero-actions"><a class="btn btn-primary" href="#courses">Give feedback <span>↗</span></a><a class="text-link" href="{{ url_for('login') }}">Administrator portal →</a></div>
+<div class="hero-stats"><div><strong>100%</strong><small>Anonymous</small></div><div><strong>1–5</strong><small>Simple ratings</small></div><div><strong>Real-time</strong><small>Course insights</small></div></div></section>
+<section id="courses" class="section"><div class="section-heading"><div><div class="eyebrow">GET STARTED</div><h2>Choose your course</h2></div><span class="muted">{{ courses|length }} active course(s)</span></div>
+{% if courses %}<div class="course-grid">{% for course in courses %}<article class="course-card"><div class="course-icon">▤</div><div class="course-code">{{ course.code }}</div><h3>{{ course.name }}</h3><p>{{ course.semester }}</p><a class="btn btn-outline" href="{{ url_for('submit_feedback', course_id=course.id) }}">Rate this course <span>→</span></a></article>{% endfor %}</div>
+{% else %}<div class="empty-state"><h3>No active courses yet</h3><p>Please check back when your administrator publishes a course.</p></div>{% endif %}</section>
+<section class="privacy-strip"><div class="privacy-icon">⌑</div><div><strong>Your privacy matters</strong><p>We do not ask for your name or roll number. Please avoid including identifying details in optional comments.</p></div></section>
+{% endblock %}

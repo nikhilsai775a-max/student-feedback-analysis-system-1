@@ -1,0 +1,14 @@
+{% extends "admin_base.html" %}{% block title %}Reports{% endblock %}{% block admin_content %}
+<div class="admin-heading"><div><div class="eyebrow">DATA INSIGHTS</div><h1>Analytics & reports</h1><p>Explore rating patterns and export an aggregated report.</p></div>{% if selected %}<a class="btn btn-outline" href="{{ url_for('export_csv', course=selected.id) }}">↓ Export CSV</a>{% endif %}</div>
+<div class="panel report-filter"><form method="get"><label for="course">Select course</label><select id="course" name="course" onchange="this.form.submit()">{% for c in courses %}<option value="{{ c.id }}" {% if selected and c.id==selected.id %}selected{% endif %}>{{ c.name }} ({{ c.code }})</option>{% endfor %}</select></form></div>
+{% if selected %}<div class="metric-grid"><div class="metric-card"><span>Course</span><strong class="metric-name">{{ selected.code }}</strong><small>{{ selected.name }}</small></div><div class="metric-card"><span>Rating questions</span><strong>{{ labels|length }}</strong><small>Active and inactive</small></div><div class="metric-card"><span>Responses per question</span><strong>{{ total_responses }}</strong><small>Maximum count across questions</small></div></div>
+<div class="chart-grid"><div class="panel chart-panel"><h2>Average rating by question</h2><p>Scale: 1 (poor) to 5 (excellent)</p><canvas id="averageChart"></canvas></div><div class="panel chart-panel"><h2>Response count</h2><p>Number of ratings received per question</p><canvas id="countChart"></canvas></div></div>
+<div class="panel"><h2>Written comments</h2>{% if comments %}<p class="muted">Comments are displayed because this course has at least five rating records.</p>{% for comment in comments %}<blockquote class="comment">{{ comment }}</blockquote>{% endfor %}{% else %}<p class="muted">Comments are hidden until the course has at least five rating records, or no comments have been submitted.</p>{% endif %}</div>
+{% else %}<div class="empty-state"><h3>No courses available</h3><p>Create a course to begin collecting feedback.</p></div>{% endif %}
+{% endblock %}
+{% block scripts %}{% if selected %}<script>
+const labels = {{ labels|tojson }}, averages = {{ averages|tojson }}, counts = {{ counts|tojson }};
+const common = {indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, grid:{color:'rgba(255,255,255,.07)'}, ticks:{color:'#aab5cc'}},y:{grid:{display:false},ticks:{color:'#dbe3f5'}}}};
+new Chart(document.getElementById('averageChart'), {type:'bar',data:{labels,datasets:[{data:averages,backgroundColor:'rgba(108,133,255,.8)',borderRadius:7}]},options:{...common,scales:{...common.scales,x:{...common.scales.x,max:5}}}});
+new Chart(document.getElementById('countChart'), {type:'bar',data:{labels,datasets:[{data:counts,backgroundColor:'rgba(48,210,180,.75)',borderRadius:7}]},options:common});
+</script>{% endif %}{% endblock %}
